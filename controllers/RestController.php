@@ -43,8 +43,13 @@ class RestController extends Controller
 
     public function actionPlots()
     {
-        $cadastreNumbers = $_GET['cadastreNumbers'] ?? '';
-        $cadastreNumbers = array_filter(explode(',', $cadastreNumbers));
+        if(isset($_GET['cadastreNumbers'])) {
+            $cadastreNumbers = is_string($_GET['cadastreNumbers']) ? explode(',', $_GET['cadastreNumbers']) : $_GET['cadastreNumbers'];
+        }
+        else {
+            $cadastreNumbers = [];
+        }
+        $cadastreNumbers = array_filter($cadastreNumbers);
         $this->cadastreNumberValidator->ensureNumbersAreValid($cadastreNumbers);
         $models = $this->apiSynchronizer->getUpdatedPlotModels($cadastreNumbers);
 
